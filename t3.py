@@ -1,6 +1,6 @@
 import numpy as np
+import sys
 
-atributos=5
 
 def compute_cost(theta_0, theta_1, theta_2, theta_3, theta_4, theta_5,data):
     """
@@ -228,29 +228,39 @@ def gradient_descent(data, starting_theta_0, starting_theta_1, learning_rate, nu
             theta_5_progress.append(theta_5)
         
         return [theta_0, theta_1, theta_2,theta_3,theta_4,theta_5, cost_graph, theta_0_progress, theta_1_progress,theta_2_progress,theta_3_progress,theta_4_progress,theta_5_progress]
-        
+      
+   
+#Scripts
+
+attr = sys.argv[1]
+atributos = 0
+data = np.genfromtxt(sys.argv[2], delimiter=',')
+
+if attr == '1attr':
+	atributos = 1
+	theta_0, theta_1, cost_graph, theta_0_progress, theta_1_progress = gradient_descent(data, starting_theta_0=0, starting_theta_1=0, learning_rate=0, num_iterations=int(sys.argv[3]))
+elif attr == '2attr':
+	atributos = 2
+	theta_0, theta_1,theta_2, cost_graph, theta_0_progress, theta_1_progress,theta_2_progress = gradient_descent(data, starting_theta_0=0, starting_theta_1=0, learning_rate=0, num_iterations=int(sys.argv[3]))
+elif attr == '5attr':
+	atributos = 5
+	theta_0, theta_1, theta_2,theta_3,theta_4,theta_5, cost_graph, theta_0_progress, theta_1_progress,theta_2_progress,theta_3_progress,theta_4_progress,theta_5_progress = gradient_descent(data, starting_theta_0=0, starting_theta_1=0, learning_rate=0, num_iterations=int(sys.argv[3]))
 
 
-data = np.genfromtxt('house_prices_train.csv', delimiter=',')
-if atributos==1:
-    theta_0, theta_1, cost_graph, theta_0_progress, theta_1_progress = gradient_descent(data, starting_theta_0=0, starting_theta_1=0, learning_rate=0, num_iterations=100)
-if atributos==2:
-    theta_0, theta_1,theta_2, cost_graph, theta_0_progress, theta_1_progress,theta_2_progress = gradient_descent(data, starting_theta_0=0, starting_theta_1=0, learning_rate=0, num_iterations=100)
-if atributos==5:
-    theta_0, theta_1, theta_2,theta_3,theta_4,theta_5, cost_graph, theta_0_progress, theta_1_progress,theta_2_progress,theta_3_progress,theta_4_progress,theta_5_progress = gradient_descent(data, starting_theta_0=0, starting_theta_1=0, learning_rate=0, num_iterations=100)
 #Imprimir parâmetros otimizados
-print ('Theta_0 otimizado: ', theta_0)
-print ('Theta_1 otimizado: ', theta_1)
+print ('Theta_0: ', theta_0)
+print ('Theta_1: ', theta_1)
 if(atributos>=2):
-    print ('Theta_2 otimizado: ', theta_2)
+    print ('Theta_2: ', theta_2)
 if(atributos>=5):
-    print ('Theta_3 otimizado: ', theta_3)
-    print ('Theta_4 otimizado: ', theta_4)
-    print ('Theta_5 otimizado: ', theta_5)
+    print ('Theta_3: ', theta_3)
+    print ('Theta_4: ', theta_4)
+    print ('Theta_5: ', theta_5)
+
 #Imprimir erro com os parâmetros otimizados
 if (atributos==1):
-    print ('Custo minimizado: ', compute_cost(theta_0, theta_1,0,0,0,0, data))
+    print ('Erro quadratico medio: ', compute_cost(theta_0, theta_1,0,0,0,0, data))
 if (atributos==2):
-    print ('Custo minimizado: ', compute_cost(theta_0, theta_1,theta_2,0,0,0, data))
+    print ('Erro quadratico medio: ', compute_cost(theta_0, theta_1,theta_2,0,0,0, data))
 if (atributos==5):
-    print ('Custo minimizado: ', compute_cost(theta_0, theta_1, theta_2,theta_3,theta_4,theta_5, data))
+    print ('Erro quadratico medio: ', compute_cost(theta_0, theta_1, theta_2,theta_3,theta_4,theta_5, data))

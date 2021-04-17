@@ -7,3 +7,6 @@ Integrantes:
 273118 - Andrei Procaska Luchese Monteiro - Turma A
 
 322864 - Gustavo Lopes Noll - Turma B
+
+
+Foi utilizada somente a biblioteca numpy.

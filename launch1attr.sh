@@ -1,2 +1,2 @@
 #!/bin/bash
-python3 nome_programa.py 1attr $1 $2
+python3 t3.py 1attr $1 $2
