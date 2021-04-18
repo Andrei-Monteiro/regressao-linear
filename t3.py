@@ -23,12 +23,12 @@ def compute_cost(theta_0, theta_1, theta_2, theta_3, theta_4, theta_5,data):
     x4 = np.array(data[:,50])
     x5 = np.array(data[:,19])
 
-    x1 = x1[np.logical_not(np.isnan(x1))]
-    x2 = x2[np.logical_not(np.isnan(x2))]
-    x3 = x3[np.logical_not(np.isnan(x3))]
-    x4 = x4[np.logical_not(np.isnan(x4))]
-    x5 = x5[np.logical_not(np.isnan(x5))]
-    y = y[np.logical_not(np.isnan(y))]
+    x1 = np.delete(x1, 0)
+    x2 = np.delete(x2, 0)
+    x3 = np.delete(x3, 0)
+    x4 = np.delete(x4, 0)
+    x5 = np.delete(x5, 0)
+    y = np.delete(y, 0)
     tam=len(x1)
     max_x1=np.amax(x1)
     min_x1=np.amin(x1)
@@ -45,12 +45,14 @@ def compute_cost(theta_0, theta_1, theta_2, theta_3, theta_4, theta_5,data):
     if atributos==1:
         for i in range(0,tam):
             x1_aux=(x1[i]-min_x1)/(max_x1-min_x1)
-            total_cost= total_cost+ ((theta_0+ theta_1*x1_aux)-y[i])**2
+            h0=theta_0+ theta_1*x1_aux
+            total_cost+=(y[i]-(h0))**2
     if (atributos==2):
         for i in range(0,tam):
             x1_aux=(x1[i]-min_x1)/(max_x1-min_x1)
             x2_aux=(x2[i]-min_x2)/(max_x2-min_x2)
-            total_cost= total_cost+ ((theta_0+ theta_1*x1_aux+theta_2*x2_aux)-y[i])**2
+            h0=theta_0+ theta_1*x1_aux+theta_2*x2_aux
+            total_cost+=(y[i]-(h0))**2
     if(atributos==5):
         for i in range(0,tam):
             x1_aux=(x1[i]-min_x1)/(max_x1-min_x1)
@@ -58,9 +60,10 @@ def compute_cost(theta_0, theta_1, theta_2, theta_3, theta_4, theta_5,data):
             x3_aux=(x3[i]-min_x3)/(max_x3-min_x3)
             x4_aux=(x4[i]-min_x4)/(max_x4-min_x4)
             x5_aux=(x5[i]-min_x5)/(max_x5-min_x5)
-            total_cost= total_cost+ ((theta_0+ theta_1*x1_aux+theta_2*x2_aux+theta_3*x3_aux+theta_4*x4_aux+theta_5*x5_aux)-y[i])**2
+            h0=theta_0+ theta_1*x1_aux+theta_2*x2_aux+theta_3*x3_aux+theta_4*x4_aux+theta_5_*x5_aux
+            total_cost+=(y[i]-(h0))**2
 
-    total_cost = total_cost/len(x1)
+    total_cost = total_cost/tam
     return total_cost
 
 def step_gradient(theta_0_current, theta_1_current,theta_2_current, theta_3_current,theta_4_current,theta_5_current, data, alpha):
@@ -82,12 +85,12 @@ def step_gradient(theta_0_current, theta_1_current,theta_2_current, theta_3_curr
     x4 = np.array(data[:,50])
     x5 = np.array(data[:,19])
 
-    x1 = x1[np.logical_not(np.isnan(x1))]
-    x2 = x2[np.logical_not(np.isnan(x2))]
-    x3 = x3[np.logical_not(np.isnan(x3))]
-    x4 = x4[np.logical_not(np.isnan(x4))]
-    x5 = x5[np.logical_not(np.isnan(x5))]
-    y = y[np.logical_not(np.isnan(y))]
+    x1 = np.delete(x1, 0)
+    x2 = np.delete(x2, 0)
+    x3 = np.delete(x3, 0)
+    x4 = np.delete(x4, 0)
+    x5 = np.delete(x5, 0)
+    y = np.delete(y, 0)
     tam=len(x1)
 
     max_x1=np.amax(x1)
@@ -101,58 +104,61 @@ def step_gradient(theta_0_current, theta_1_current,theta_2_current, theta_3_curr
     max_x5=np.amax(x5)
     min_x5=np.amin(x5)
 
-    derivada_0=0
-    derivada_1=0
-    derivada_2=0
-    derivada_3=0
-    derivada_4=0
-    derivada_5=0
+    soma_0=0
+    soma_1=0
 
     if(atributos==1):
         for i in range(0,tam):
             x1_aux=(x1[i]-min_x1)/(max_x1-min_x1)
-            derivada_0= derivada_0+ ((theta_0_current+ theta_1_current*x1_aux)-y[i])
-            derivada_1=derivada_1 + (((theta_0_current+ theta_1_current*x1_aux)-y[i])*x1_aux)
-        derivada_0=2* derivada_0/tam
-        derivada_1=2* derivada_1/tam
+            h0=theta_0_current+ theta_1_current*x1_aux
+            soma_0+= h0 - y[i]
+            soma_1+= (h0 - y[i]) * x1_aux
+        derivada_0=2* soma_0/tam
+        derivada_1=2* soma_1/tam
         theta_0_updated = theta_0_current- derivada_0*alpha
         theta_1_updated = theta_1_current- derivada_1*alpha
         return theta_0_updated, theta_1_updated
 
     if(atributos==2):
+        soma_2=0
         for i in range(0,tam):
             x1_aux=(x1[i]-min_x1)/(max_x1-min_x1)
             x2_aux=(x2[i]-min_x2)/(max_x2-min_x2)
-            derivada_0= derivada_0+ ((theta_0_current+ theta_1_current*x1_aux)-y[i])
-            derivada_1=derivada_1 + (((theta_0_current+ theta_1_current*x1_aux)-y[i])*x1_aux)
-            derivada_2=derivada_2 + (((theta_0_current+ theta_1_current*x1_aux+theta_2_current*x2_aux)-y[i])*x2_aux)
-        derivada_0=2* derivada_0/tam
-        derivada_1=2* derivada_1/tam
-        derivada_2=2* derivada_2/tam
+            h0=theta_0_current+ theta_1_current*x1_aux+theta_2_current*x2_aux
+            soma_0+= h0 - y[i]
+            soma_1+= (h0 - y[i]) * x1_aux
+            soma_2+= (h0 - y[i]) * x2_aux
+        derivada_0=2* soma_0/tam
+        derivada_1=2* soma_1/tam
+        derivada_2=2* soma_2/tam
         theta_0_updated = theta_0_current- derivada_0*alpha
         theta_1_updated = theta_1_current- derivada_1*alpha
         theta_2_updated= theta_2_current- derivada_2*alpha
         return theta_0_updated, theta_1_updated, theta_2_updated
     if(atributos==5):
+        soma_2=0
+        soma_3=0
+        soma_4=0
+        soma_5=0
         for i in range(0,tam):
             x1_aux=(x1[i]-min_x1)/(max_x1-min_x1)
             x2_aux=(x2[i]-min_x2)/(max_x2-min_x2)
             x3_aux=(x3[i]-min_x3)/(max_x3-min_x3)
             x4_aux=(x4[i]-min_x4)/(max_x4-min_x4)
             x5_aux=(x5[i]-min_x5)/(max_x5-min_x5)
-            derivada_0= derivada_0+ ((theta_0_current+ theta_1_current*x1_aux)-y[i])
-            derivada_1=derivada_1 + (((theta_0_current+ theta_1_current*x1_aux)-y[i])*x1_aux)
-            derivada_2=derivada_2 + (((theta_0_current+ theta_1_current*x1_aux+theta_2_current*x2_aux)-y[i])*x2_aux)
-            derivada_3=derivada_3 + (((theta_0_current+ theta_1_current*x1_aux+theta_2_current*x2_aux+theta_3_current*x3_aux)-y[i])*x3_aux)
-            derivada_4=derivada_4 + (((theta_0_current+ theta_1_current*x1_aux+theta_2_current*x2_aux+theta_3_current*x3_aux+theta_4_current*x4_aux)-y[i])*x4_aux)
-            derivada_5=derivada_5 + (((theta_0_current+ theta_1_current*x1_aux+theta_2_current*x2_aux+theta_3_current*x3_aux+theta_4_current*x4_aux+theta_5_current*x5_aux)-y[i])*x5_aux)
-
-        derivada_0=2* derivada_0/tam
-        derivada_1=2* derivada_1/tam
-        derivada_2=2* derivada_2/tam
-        derivada_3=2* derivada_3/tam
-        derivada_4=2* derivada_4/tam
-        derivada_5=2* derivada_5/tam
+            h0=theta_0_current+ theta_1_current*x1_aux+theta_2_current*x2_aux+theta_3_current*x3_aux+theta_4_current*x4_aux+theta_5_current*x5_aux
+            soma_0+= h0 - y[i]
+            soma_1+= (h0 - y[i]) * x1_aux
+            soma_2+= (h0 - y[i]) * x2_aux
+            soma_3+= (h0 - y[i]) * x3_aux
+            soma_4+= (h0 - y[i]) * x4_aux
+            soma_5+= (h0 - y[i]) * x5_aux
+        derivada_0=2* soma_0/tam
+        derivada_1=2* soma_1/tam
+        derivada_2=2* soma_2/tam
+        derivada_3=2* soma_3/tam
+        derivada_4=2* soma_4/tam
+        derivada_5=2* soma_5/tam
         theta_0_updated = theta_0_current- derivada_0*alpha
         theta_1_updated = theta_1_current- derivada_1*alpha
         theta_2_updated= theta_2_current- derivada_2*alpha
@@ -161,7 +167,7 @@ def step_gradient(theta_0_current, theta_1_current,theta_2_current, theta_3_curr
         theta_5_updated= theta_5_current- derivada_5*alpha
         return theta_0_updated, theta_1_updated, theta_2_updated, theta_3_updated,theta_4_updated, theta_5_updated
 
-def gradient_descent(data, starting_theta_0, starting_theta_1, learning_rate, num_iterations):
+def gradient_descent(data, starting_theta_0, starting_theta_1, starting_theta_2, starting_theta_3, starting_theta_4, starting_theta_5, learning_rate, num_iterations):
     """executa a descida do gradiente
     
     Args:
@@ -179,11 +185,11 @@ def gradient_descent(data, starting_theta_0, starting_theta_1, learning_rate, nu
     theta_0 = starting_theta_0
     theta_1 = starting_theta_1
     if (atributos>=2):
-        theta_2=0
+        theta_2=starting_theta_2
     if (atributos>=5):
-        theta_3=0
-        theta_4=0
-        theta_5=0
+        theta_3=starting_theta_3
+        theta_4=starting_theta_4
+        theta_5=starting_theta_5
     
     # variável para armazenar o custo ao final de cada step_gradient
     cost_graph = []
@@ -200,34 +206,23 @@ def gradient_descent(data, starting_theta_0, starting_theta_1, learning_rate, nu
         # Para cada iteração, obtem novos (Theta0,Theta1) e calcula o custo (EQM)
         for i in range(num_iterations):
             cost_graph.append(compute_cost(theta_0, theta_1, 0, 0, 0, 0, data))
-            theta_0, theta_1= step_gradient(theta_0, theta_1,0,0,0,0, data, alpha=0.0001)
-            theta_0_progress.append(theta_0)
-            theta_1_progress.append(theta_1)
+            theta_0, theta_1= step_gradient(theta_0, theta_1,0,0,0,0, data, alpha=learning_rate)
         
-        return [theta_0, theta_1, cost_graph, theta_0_progress, theta_1_progress]
+        return [theta_0, theta_1, cost_graph]
     if (atributos==2):
         # Para cada iteração, obtem novos (Theta0,Theta1) e calcula o custo (EQM)
         for i in range(num_iterations):
             cost_graph.append(compute_cost(theta_0, theta_1,theta_2,0,0,0,data))
-            theta_0, theta_1,theta_2= step_gradient(theta_0, theta_1,theta_2,0,0,0,data, alpha=0.0001)
-            theta_0_progress.append(theta_0)
-            theta_1_progress.append(theta_1)
-            theta_2_progress.append(theta_2)
+            theta_0, theta_1,theta_2= step_gradient(theta_0, theta_1,theta_2,0,0,0,data, alpha=learning_rate)
         
-        return [theta_0, theta_1,theta_2, cost_graph, theta_0_progress, theta_1_progress,theta_2_progress]
+        return [theta_0, theta_1,theta_2, cost_graph]
     if (atributos==5):
         # Para cada iteração, obtem novos (Theta0,Theta1) e calcula o custo (EQM)
         for i in range(num_iterations):
             cost_graph.append(compute_cost(theta_0, theta_1,theta_2,theta_3,theta_4,theta_5, data))
-            theta_0, theta_1,theta_2,theta_3,theta_4,theta_5 = step_gradient(theta_0, theta_1,theta_2,theta_3,theta_4,theta_5,data, alpha=0.0001)
-            theta_0_progress.append(theta_0)
-            theta_1_progress.append(theta_1)
-            theta_2_progress.append(theta_2)
-            theta_3_progress.append(theta_3)
-            theta_4_progress.append(theta_4)
-            theta_5_progress.append(theta_5)
+            theta_0, theta_1,theta_2,theta_3,theta_4,theta_5 = step_gradient(theta_0, theta_1,theta_2,theta_3,theta_4,theta_5,data, alpha=learning_rate)
         
-        return [theta_0, theta_1, theta_2,theta_3,theta_4,theta_5, cost_graph, theta_0_progress, theta_1_progress,theta_2_progress,theta_3_progress,theta_4_progress,theta_5_progress]
+        return [theta_0, theta_1, theta_2,theta_3,theta_4,theta_5, cost_graph]
       
    
 #Scripts
@@ -238,13 +233,13 @@ data = np.genfromtxt(sys.argv[2], delimiter=',')
 
 if attr == '1attr':
 	atributos = 1
-	theta_0, theta_1, cost_graph, theta_0_progress, theta_1_progress = gradient_descent(data, starting_theta_0=0, starting_theta_1=0, learning_rate=0, num_iterations=int(sys.argv[3]))
+	theta_0, theta_1, cost_graph= gradient_descent(data, starting_theta_0=0, starting_theta_1=0, starting_theta_2=0, starting_theta_3=0, starting_theta_4=0, starting_theta_5=0, learning_rate=0.000001, num_iterations=int(sys.argv[3]))
 elif attr == '2attr':
 	atributos = 2
-	theta_0, theta_1,theta_2, cost_graph, theta_0_progress, theta_1_progress,theta_2_progress = gradient_descent(data, starting_theta_0=0, starting_theta_1=0, learning_rate=0, num_iterations=int(sys.argv[3]))
+	theta_0, theta_1,theta_2, cost_graph, theta_0_progress= gradient_descent(data, starting_theta_0=0, starting_theta_1=0, starting_theta_2=0, starting_theta_3=0, starting_theta_4=0, starting_theta_5=0, learning_rate=0.000001, num_iterations=int(sys.argv[3]))
 elif attr == '5attr':
 	atributos = 5
-	theta_0, theta_1, theta_2,theta_3,theta_4,theta_5, cost_graph, theta_0_progress, theta_1_progress,theta_2_progress,theta_3_progress,theta_4_progress,theta_5_progress = gradient_descent(data, starting_theta_0=0, starting_theta_1=0, learning_rate=0, num_iterations=int(sys.argv[3]))
+	theta_0, theta_1, theta_2,theta_3,theta_4,theta_5, cost_graph = gradient_descent(data, starting_theta_0=0, starting_theta_1=0, starting_theta_2=0, starting_theta_3=0, starting_theta_4=0, starting_theta_5=0, learning_rate=0.000001, num_iterations=int(sys.argv[3]))
 
 
 #Imprimir parâmetros otimizados
